@@ -6,10 +6,11 @@ export interface IMsalWpProps {
 }
 
 export interface IMsalWpState {
+    employeeId: any;
     loading?: boolean;
     loggedIn?: boolean;
     person?: IPerson;
-    mails?: IMail[];
+    employeeIds?: IEmployeeId[];
 }
 
 export interface IPerson {
@@ -18,7 +19,7 @@ export interface IPerson {
     displayName?: string;
     givenName?: string;
     jobTitle?: string;
-    mail?: string;
+    employeeId?: string;
     mobilePhone?: any;
     officeLocation?: any;
     preferredLanguage?: string;
@@ -26,10 +27,10 @@ export interface IPerson {
     userPrincipalName?: string;
 }
 
-export interface IMails {
-    value: IMail[];
+export interface IEmployeeIds {
+    value: IEmployeeIds[];
 }
 
-export interface IMail {
-    subject: string;
+export interface IEmployeeId {
+    employeeId: string;
 }

@@ -53,7 +53,7 @@ export default class GraphConsumer extends React.Component<IGraphConsumerProps, 
 
   constructor(props: IGraphConsumerProps, state: IGraphConsumerState) {
     super(props);
-    
+
     // Initialize the state of the component
     this.state = {
       // users: _fakeUsers,
@@ -70,19 +70,19 @@ export default class GraphConsumer extends React.Component<IGraphConsumerProps, 
             <div className={ styles.column }>
               <span className={ styles.title }>Search for a user!</span>
               <p className={ styles.form }>
-                <TextField 
-                    label={ strings.SearchFor } 
-                    required={ true } 
+                <TextField
+                    label={ strings.SearchFor }
+                    required={ true }
                     onChange={ this._onSearchForChanged }
                     onGetErrorMessage={ this._getSearchForErrorMessage }
                     value={ this.state.searchFor }
                   />
               </p>
               <p className={ styles.form }>
-                <PrimaryButton 
-                    text='Search' 
-                    title='Search' 
-                    onClick={ this._search } 
+                <PrimaryButton
+                    text='Search'
+                    title='Search'
+                    onClick={ this._search }
                   />
               </p>
               {
@@ -108,7 +108,7 @@ export default class GraphConsumer extends React.Component<IGraphConsumerProps, 
   }
 
   private _onSearchForChanged = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string): void => {
- 
+
     // Update the component state accordingly to the current user's input
     this.setState({
       searchFor: newValue,
@@ -149,7 +149,7 @@ export default class GraphConsumer extends React.Component<IGraphConsumerProps, 
         // Search for the users with givenName, surname, or displayName equal to the searchFor value
         return client
           .get(
-            `https://graph.microsoft.com/v1.0/users?$select=displayName,mail,userPrincipalName&$filter=(givenName%20eq%20'${escape(this.state.searchFor)}')%20or%20(surname%20eq%20'${escape(this.state.searchFor)}')%20or%20(displayName%20eq%20'${escape(this.state.searchFor)}')`,
+            `https://graph.microsoft.com/v1.0/me?$select=displayName,mail,userPrincipalName')`,
             AadHttpClient.configurations.v1
           );
       })
@@ -166,7 +166,7 @@ export default class GraphConsumer extends React.Component<IGraphConsumerProps, 
 
         // Map the JSON response to the output array
         json.value.map((item: any) => {
-          users.push( { 
+          users.push( {
             displayName: item.displayName,
             mail: item.mail,
             userPrincipalName: item.userPrincipalName,
@@ -193,13 +193,12 @@ export default class GraphConsumer extends React.Component<IGraphConsumerProps, 
     this.props.context.msGraphClientFactory
       .getClient()
       .then((client: MSGraphClient) => {
-        // From https://github.com/microsoftgraph/msgraph-sdk-javascript sample
         client
-          .api("users")
+          .api("me")
           .version("v1.0")
           .select("displayName,mail,userPrincipalName")
-          .filter(`(givenName eq '${escape(this.state.searchFor)}') or (surname eq '${escape(this.state.searchFor)}') or (displayName eq '${escape(this.state.searchFor)}')`)
-          .get((err, res) => {  
+         // .filter(`(givenName eq '${escape(this.state.searchFor)}') or (surname eq '${escape(this.state.searchFor)}') or (displayName eq '${escape(this.state.searchFor)}')`)
+          .get((err, res) => {
 
             if (err) {
               console.error(err);
@@ -211,7 +210,7 @@ export default class GraphConsumer extends React.Component<IGraphConsumerProps, 
 
             // Map the JSON response to the output array
             res.value.map((item: any) => {
-              users.push( { 
+              users.push( {
                 displayName: item.displayName,
                 mail: item.mail,
                 userPrincipalName: item.userPrincipalName,

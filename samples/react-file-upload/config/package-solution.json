@@ -1,7 +1,7 @@
 {
   "$schema": "https://dev.office.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "SPFileUpload-client-side-solution",
+    "name": "SPFileUpload",
     "id": "297016d1-8144-431f-87e5-fe5272d0a226",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,

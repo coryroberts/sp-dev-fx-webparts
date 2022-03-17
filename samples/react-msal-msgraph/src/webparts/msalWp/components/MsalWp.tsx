@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import styles from './MsalWp.module.scss';
-import { IMsalWpProps, IMsalWpState, IPerson, IMails, IMail } from './IMsalWpProps';
+import { IMsalWpProps, IMsalWpState, IPerson, IEmployeeIds, IEmployeeId } from './IMsalWpProps';
 import { HttpClient } from "@microsoft/sp-http";
 import { PrimaryButton, Persona, PersonaSize, PersonaInitialsColor, List, Spinner, SpinnerType } from 'office-ui-fabric-react';
 
@@ -17,7 +17,7 @@ declare const Msal;
  * Register your app here: https://apps.dev.microsoft.com/
  */
 const msalconfig = {
-    clientID: "00000000-0000-0000-0000-000000000000", // Azure AD Application
+    clientID: "8ee46729-5288-4d35-82b7-36f313429239", // Azure AD Application
     redirectUri: location.origin
 };
 
@@ -25,6 +25,7 @@ const scopes = ["User.Read", "Mail.Read"];
 
 export default class MsalWp extends React.Component<IMsalWpProps, IMsalWpState> {
     private clientApplication: Msal.UserAgentApplication;
+    _getMessages: any;
 
     constructor(props: IMsalWpProps) {
         super(props);
@@ -34,7 +35,7 @@ export default class MsalWp extends React.Component<IMsalWpProps, IMsalWpState> 
             loading: false,
             loggedIn: false,
             person: null,
-            mails: []
+            employeeId: []
         };
 
         // Initialize the user agent application for MSAL
@@ -79,13 +80,13 @@ export default class MsalWp extends React.Component<IMsalWpProps, IMsalWpState> 
         // Retrieve a accessToken to call the Microsoft Graph
         this.clientApplication.acquireTokenSilent(scopes).then((token: string) => {
             this._getCrntUser(token);
-            this._getMessages(token);
+            this._getEmployeeId(token);
         }, (error) => {
             // Interaction required
             if (error) {
                 this.clientApplication.acquireTokenPopup(scopes).then((token: string) => {
                     this._getCrntUser(token);
-                    this._getMessages(token);
+                    this._getEmployeeId(token);
                 }, (err: string) => {
                     // Something went wrong
                     console.log('Error:', err);
@@ -120,17 +121,17 @@ export default class MsalWp extends React.Component<IMsalWpProps, IMsalWpState> 
     /**
      * Get the mails of the current user
      */
-    private _getMessages(token: string): void {
+    private _getEmployeeId(token: string): void {
         // Call the Microsoft Graph
-        this.props.context.httpClient.get('https://graph.microsoft.com/v1.0/me/messages', HttpClient.configurations.v1, {
+        this.props.context.httpClient.get('https://graph.microsoft.com/beta/me?select="employeeId"', HttpClient.configurations.v1, {
             headers: {
                 "authorization": `Bearer ${token}`
             }
         }).then(response => {
             return response.json();
-        }).then((data: IMails) => {
+        }).then((data: IEmployeeIds) => {
             this.setState({
-                mails: data.value,
+                employeeId: data.value,
                 loading: false
             });
         });
@@ -153,16 +154,16 @@ export default class MsalWp extends React.Component<IMsalWpProps, IMsalWpState> 
                 imageInitials={`${this.state.person.givenName.slice(0, 1)}${this.state.person.surname.slice(0, 1)}`}
                 secondaryText={this.state.person.jobTitle}
                 optionalText="w00t"
-                tertiaryText={this.state.person.mail}
+                tertiaryText={this.state.person.employeeId}
                 size={PersonaSize.extraLarge}
                 hidePersonaDetails={false}
                 initialsColor={PersonaInitialsColor.red}
             />;
         }
 
-        let mails: JSX.Element = <div />;
-        if (this.state.mails.length > 0) {
-            mails = <p className="ms-font-l ms-fontColor-neutralPrimary">Your mails</p>;
+        let employeeId: JSX.Element = <div />;
+        if (this.state.employeeId.length > 0) {
+            employeeId = <p className="ms-font-l ms-fontColor-neutralPrimary">Your employeeId</p>;
         }
 
         return (
@@ -176,10 +177,10 @@ export default class MsalWp extends React.Component<IMsalWpProps, IMsalWpState> 
 
                             {userInfo}
 
-                            {mails}
+                            {employeeId}
 
-                            <List items={this.state.mails} onRenderCell={(item: IMail, index: number) => (
-                                <div>{index++}: {item.subject}</div>
+                            <List items={this.state.employeeId} onRenderCell={(item: IEmployeeId, index: number) => (
+                                <div>{index++}: {item.employeeId}</div>
                             )} />
                         </div>
                     </div>

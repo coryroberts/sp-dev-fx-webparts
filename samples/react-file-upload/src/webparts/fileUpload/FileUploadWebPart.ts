@@ -5,7 +5,7 @@ import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
   PropertyPaneTextField,
-  IWebPartContext
+  WebPartContext
 } from '@microsoft/sp-webpart-base';
 import { IDigestCache, DigestCache } from '@microsoft/sp-http';
 import * as strings from 'FileUploadWebPartStrings';
@@ -24,8 +24,8 @@ require("./filepicker.css");
 require("./dropzone.css");
 export default class FileUploadWebPart extends BaseClientSideWebPart<IFileUploadWebPartProps> {
   public digest:string="";
-  public constructor(context:IWebPartContext){
-    super();    
+  public constructor(context:WebPartContext){
+    super();
     loader.SPComponentLoader.loadCss('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
   }
   protected onInit(): Promise<void> {
@@ -84,13 +84,13 @@ export default class FileUploadWebPart extends BaseClientSideWebPart<IFileUpload
                   disabled: false,
                   onPropertyChange: this.onPropertyPaneFieldChanged.bind(this),
                   properties: this.properties,
-                  context: this.context,                  
+                  context: this.context,
                   onGetErrorMessage: null,
                   deferredValidationTime: 0,
                   key: 'listPickerFieldId'
                 }),
                 PropertyPaneTextField('fileTypes',{
-                  label:'File Types (use , as seperator)',                  
+                  label:'File Types (use , as seperator)',
                 }),
                 PropertyPaneTextField('queryString',{
                   label:'Query String parameter',

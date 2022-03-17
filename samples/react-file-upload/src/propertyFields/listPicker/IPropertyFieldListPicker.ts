@@ -1,4 +1,4 @@
-import { IWebPartContext, IPropertyPaneCustomFieldProps } from '@microsoft/sp-webpart-base';
+import { WebPartContext, IPropertyPaneCustomFieldProps } from '@microsoft/sp-webpart-base';
 
 /**
  * Enum for specifying how the lists should be sorted
@@ -20,7 +20,7 @@ export interface IPropertyFieldListPickerProps {
   /**
    * Context of the current web part
    */
-  context: IWebPartContext;
+  context: WebPartContext;
   /**
    * Initial selected list set of the control
    */
@@ -91,7 +91,7 @@ export interface IPropertyFieldListPickerPropsInternal extends IPropertyFieldLis
 
   label: string;
   targetProperty: string;
-  context: IWebPartContext;
+  context: WebPartContext;
   selectedList?: string;
   selectedLists?: string[];
   baseTemplate?: number;

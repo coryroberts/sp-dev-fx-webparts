@@ -2,9 +2,11 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
-  BaseClientSideWebPart,
   IPropertyPaneConfiguration,
   PropertyPaneChoiceGroup
+} from '@microsoft/sp-property-pane';
+import {
+  BaseClientSideWebPart,
 } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'GraphConsumerWebPartStrings';
@@ -30,6 +32,7 @@ export default class GraphConsumerWebPart extends BaseClientSideWebPart<IGraphCo
     ReactDom.render(element, this.domElement);
   }
 
+  //@ts-ignore
   protected get dataVersion(): Version {
     return Version.parse('1.0');
   }
@@ -51,7 +54,7 @@ export default class GraphConsumerWebPart extends BaseClientSideWebPart<IGraphCo
                     { key: ClientMode.aad, text: "AadHttpClient"},
                     { key: ClientMode.graph, text: "MSGraphClient"},
                   ]
-                }),              
+                }),
               ]
             }
           ]
